@@ -81,22 +81,19 @@ st.altair_chart(chart)
 
 # Decision aid data
 def create_decision_aid_data(tp, fp, fn, tn):
-    total = tp + fp + fn + tn
-    tp_percentage = tp / total * 100
-    fp_percentage = fp / total * 100
-    fn_percentage = fn / total * 100
-    tn_percentage = tn / total * 100
+    total_positive_test = tp + fp
+    total_negative_test = fn + tn
 
     positive_test_data = []
     negative_test_data = []
 
     for i in range(100):
-        if i < tp_percentage:
+        if i < (tp / total_positive_test) * 100:
             positive_test_data.append({"index": i, "Condition": "Condition (+)", "x": i % 10, "y": i // 10})
         else:
             positive_test_data.append({"index": i, "Condition": "Condition (-)", "x": i % 10, "y": i // 10})
 
-        if i < fn_percentage:
+        if i < (fn / total_negative_test) * 100:
             negative_test_data.append({"index": i, "Condition": "Condition (+)", "x": i % 10, "y": i // 10})
         else:
             negative_test_data.append({"index": i, "Condition": "Condition (-)", "x": i % 10, "y": i // 10})
