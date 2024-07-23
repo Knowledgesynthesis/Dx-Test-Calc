@@ -95,7 +95,9 @@ def create_decision_aid_data(percentage, total=100):
     for i in range(total):
         data.append({
             'index': i + 1,
-            'Condition': 'Condition (+)' if i < num_disease else 'Condition (-)'
+            'Condition': 'Condition (+)' if i < num_disease else 'Condition (-)',
+            'x': i % 10,
+            'y': i // 10
         })
     return pd.DataFrame(data)
 
@@ -108,8 +110,8 @@ negative_test_data = create_decision_aid_data(results['npv'])
 # Decision aid charts
 st.subheader("Decision Aid for Positive Test")
 positive_chart = alt.Chart(positive_test_data).mark_circle(size=100).encode(
-    x=alt.X('index % 10:O', title=''),
-    y=alt.Y('floor(index / 10):O', title=''),
+    x=alt.X('x:O', axis=None),
+    y=alt.Y('y:O', axis=None, sort='descending'),
     color=alt.Color('Condition:N', scale=color_scale)
 ).properties(
     width=300,
@@ -123,8 +125,8 @@ st.altair_chart(positive_chart)
 
 st.subheader("Decision Aid for Negative Test")
 negative_chart = alt.Chart(negative_test_data).mark_circle(size=100).encode(
-    x=alt.X('index % 10:O', title=''),
-    y=alt.Y('floor(index / 10):O', title=''),
+    x=alt.X('x:O', axis=None),
+    y=alt.Y('y:O', axis=None, sort='descending'),
     color=alt.Color('Condition:N', scale=color_scale)
 ).properties(
     width=300,
