@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import matplotlib.pyplot as plt
 
 # Function to calculate the results
 def calculate_results(total_patients, prevalence, sensitivity, specificity):
@@ -66,7 +66,10 @@ chart_data = pd.DataFrame([
 
 # Bar chart
 st.subheader("Contingency Table Analysis of Diagnostic Test Performance")
-fig = px.bar(chart_data, x=["Condition (+)", "Condition (-)"], y="name", orientation='h',
-             title="Contingency Table Analysis of Diagnostic Test Performance",
-             labels={"value": "Count", "name": ""}, barmode='stack')
-st.plotly_chart(fig)
+
+fig, ax = plt.subplots()
+chart_data.set_index('name').plot(kind='barh', stacked=True, ax=ax, color=['#ef4444', '#22c55e'])
+ax.set_xlabel('Count')
+ax.set_ylabel('')
+ax.set_title('Contingency Table Analysis of Diagnostic Test Performance')
+st.pyplot(fig)
