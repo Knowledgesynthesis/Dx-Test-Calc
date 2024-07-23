@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import math
 
 # Function to calculate the results
 def calculate_results(total_patients, prevalence, sensitivity, specificity):
@@ -90,10 +91,13 @@ st.altair_chart(chart)
 def create_decision_aid_data(percentage, total=100):
     num_disease = round(percentage)
     num_no_disease = total - num_disease
-    return pd.DataFrame({
-        'index': range(1, total + 1),
-        'Condition': ['Condition (+)' if i < num_disease else 'Condition (-)' for i in range(total)]
-    })
+    data = []
+    for i in range(total):
+        data.append({
+            'index': i + 1,
+            'Condition': 'Condition (+)' if i < num_disease else 'Condition (-)'
+        })
+    return pd.DataFrame(data)
 
 # Positive test decision aid
 positive_test_data = create_decision_aid_data(results['ppv'])
@@ -104,22 +108,30 @@ negative_test_data = create_decision_aid_data(results['npv'])
 # Decision aid charts
 st.subheader("Decision Aid for Positive Test")
 positive_chart = alt.Chart(positive_test_data).mark_circle(size=100).encode(
-    x='index % 10:O',
-    y='floor(index / 10):O',
+    x=alt.X('index % 10:O', title=''),
+    y=alt.Y('floor(index / 10):O', title=''),
     color=alt.Color('Condition:N', scale=color_scale)
 ).properties(
     width=300,
     height=300
+).configure_axis(
+    grid=False
+).configure_view(
+    strokeWidth=0
 )
 st.altair_chart(positive_chart)
 
 st.subheader("Decision Aid for Negative Test")
 negative_chart = alt.Chart(negative_test_data).mark_circle(size=100).encode(
-    x='index % 10:O',
-    y='floor(index / 10):O',
+    x=alt.X('index % 10:O', title=''),
+    y=alt.Y('floor(index / 10):O', title=''),
     color=alt.Color('Condition:N', scale=color_scale)
 ).properties(
     width=300,
     height=300
+).configure_axis(
+    grid=False
+).configure_view(
+    strokeWidth=0
 )
 st.altair_chart(negative_chart)
