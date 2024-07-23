@@ -80,24 +80,31 @@ chart = alt.Chart(chart_data).transform_fold(
 st.altair_chart(chart)
 
 # Decision aid data
-def create_decision_aid_data(true_count, false_count, total=100):
-    true_percentage = (true_count / (true_count + false_count)) * total
-    false_percentage = total - true_percentage
-    data = []
-    for i in range(total):
-        data.append({
-            'index': i + 1,
-            'Condition': 'Condition (+)' if i < true_percentage else 'Condition (-)',
-            'x': i % 10,
-            'y': i // 10
-        })
-    return pd.DataFrame(data)
+def create_decision_aid_data(tp, fp, fn, tn):
+    total = tp + fp + fn + tn
+    tp_percentage = tp / total * 100
+    fp_percentage = fp / total * 100
+    fn_percentage = fn / total * 100
+    tn_percentage = tn / total * 100
 
-# Positive test decision aid
-positive_test_data = create_decision_aid_data(tp, fp)
+    positive_test_data = []
+    negative_test_data = []
 
-# Negative test decision aid
-negative_test_data = create_decision_aid_data(fn, tn)
+    for i in range(100):
+        if i < tp_percentage:
+            positive_test_data.append({"index": i, "Condition": "Condition (+)", "x": i % 10, "y": i // 10})
+        else:
+            positive_test_data.append({"index": i, "Condition": "Condition (-)", "x": i % 10, "y": i // 10})
+
+        if i < fn_percentage:
+            negative_test_data.append({"index": i, "Condition": "Condition (+)", "x": i % 10, "y": i // 10})
+        else:
+            negative_test_data.append({"index": i, "Condition": "Condition (-)", "x": i % 10, "y": i // 10})
+
+    return pd.DataFrame(positive_test_data), pd.DataFrame(negative_test_data)
+
+# Generate decision aid data
+positive_test_data, negative_test_data = create_decision_aid_data(tp, fp, fn, tn)
 
 # Decision aid charts
 st.subheader("Decision Aid for Positive Test")
