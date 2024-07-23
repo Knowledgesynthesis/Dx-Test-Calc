@@ -140,7 +140,7 @@ st.altair_chart(negative_chart)
 
 # Footer
 st.markdown("""
-    <div style="text-align: center; margin-top: 50px;">
+    <div style="text-align: center; margin-top: 50px; padding: 10px; background-color: #f8f9fa;">
         Web app made by Bashar Hasan, MD
     </div>
 """, unsafe_allow_html=True)
