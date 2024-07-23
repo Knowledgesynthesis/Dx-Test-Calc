@@ -88,24 +88,24 @@ chart = alt.Chart(chart_data).transform_fold(
 st.altair_chart(chart)
 
 # Decision aid data
-def create_decision_aid_data(percentage, total=100):
-    num_disease = round(percentage)
-    num_no_disease = total - num_disease
+def create_decision_aid_data(true_count, false_count, total=100):
+    true_percentage = (true_count / (true_count + false_count)) * total
+    false_percentage = total - true_percentage
     data = []
     for i in range(total):
         data.append({
             'index': i + 1,
-            'Condition': 'Condition (+)' if i < num_disease else 'Condition (-)',
+            'Condition': 'Condition (+)' if i < true_percentage else 'Condition (-)',
             'x': i % 10,
             'y': i // 10
         })
     return pd.DataFrame(data)
 
 # Positive test decision aid
-positive_test_data = create_decision_aid_data(results['ppv'])
+positive_test_data = create_decision_aid_data(results['true_positive'], results['false_positive'])
 
 # Negative test decision aid
-negative_test_data = create_decision_aid_data(results['npv'])
+negative_test_data = create_decision_aid_data(results['false_negative'], results['true_negative'])
 
 # Decision aid charts
 st.subheader("Decision Aid for Positive Test")
