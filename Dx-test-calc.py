@@ -64,15 +64,20 @@ chart_data = pd.DataFrame([
     {"name": "(-) test", "Condition (+)": results['false_negative'], "Condition (-)": results['true_negative']}
 ])
 
-# Bar chart
+# Bar chart with custom colors
 st.subheader("Contingency Table Analysis of Diagnostic Test Performance")
+color_scale = alt.Scale(
+    domain=['Condition (+)', 'Condition (-)'],
+    range=['#ef4444', '#22c55e']
+)
+
 chart = alt.Chart(chart_data).transform_fold(
     fold=['Condition (+)', 'Condition (-)'],
     as_=['Condition', 'Count']
 ).mark_bar().encode(
     x=alt.X('Count:Q', stack='zero'),
     y=alt.Y('name:N'),
-    color='Condition:N'
+    color=alt.Color('Condition:N', scale=color_scale)
 ).properties(
     title='Contingency Table Analysis of Diagnostic Test Performance',
     width=600,
