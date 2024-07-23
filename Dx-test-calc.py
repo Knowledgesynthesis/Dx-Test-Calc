@@ -85,3 +85,41 @@ chart = alt.Chart(chart_data).transform_fold(
 )
 
 st.altair_chart(chart)
+
+# Decision aid data
+def create_decision_aid_data(percentage, total=100):
+    num_disease = round(percentage)
+    num_no_disease = total - num_disease
+    return pd.DataFrame({
+        'index': range(1, total + 1),
+        'Condition': ['Condition (+)' if i < num_disease else 'Condition (-)' for i in range(total)]
+    })
+
+# Positive test decision aid
+positive_test_data = create_decision_aid_data(results['ppv'])
+
+# Negative test decision aid
+negative_test_data = create_decision_aid_data(results['npv'])
+
+# Decision aid charts
+st.subheader("Decision Aid for Positive Test")
+positive_chart = alt.Chart(positive_test_data).mark_circle(size=100).encode(
+    x='index % 10:O',
+    y='floor(index / 10):O',
+    color=alt.Color('Condition:N', scale=color_scale)
+).properties(
+    width=300,
+    height=300
+)
+st.altair_chart(positive_chart)
+
+st.subheader("Decision Aid for Negative Test")
+negative_chart = alt.Chart(negative_test_data).mark_circle(size=100).encode(
+    x='index % 10:O',
+    y='floor(index / 10):O',
+    color=alt.Color('Condition:N', scale=color_scale)
+).properties(
+    width=300,
+    height=300
+)
+st.altair_chart(negative_chart)
