@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 # Function to calculate the results
 def calculate_results(total_patients, prevalence, sensitivity, specificity):
@@ -45,15 +46,27 @@ specificity = st.number_input("Specificity (%)", min_value=0.0, max_value=100.0,
 # Calculate results
 results = calculate_results(total_patients, prevalence, sensitivity, specificity)
 
-# Display results in a table
+# Display results using st.write
 st.subheader("Results")
-results_df = pd.DataFrame([
-    ["(+) test", results['true_positive'], results['false_positive'], results['test_positive'], "PPV", f"{results['ppv']:.0f}%"],
-    ["(-) test", results['false_negative'], results['true_negative'], results['test_negative'], "NPV", f"{results['npv']:.0f}%"],
-    ["Total", results['true_positive'] + results['false_negative'], results['false_positive'] + results['true_negative'], total_patients, "Prevalence", f"{prevalence}%"],
-    ["", "Sen", "Spec", "", "LR+", f"{results['lr_plus']:.2f}"],
-    ["", f"{sensitivity}%", f"{specificity}%", "", "LR-", f"{results['lr_minus']:.2f}"],
-    ["", "", "", "", "Accuracy", f"{results['accuracy']:.0f}%"]
-], columns=["", "(+) condition", "(-) condition", "Total", "", ""])
+st.write(f"True Positive: {results['true_positive']}")
+st.write(f"False Positive: {results['false_positive']}")
+st.write(f"False Negative: {results['false_negative']}")
+st.write(f"True Negative: {results['true_negative']}")
+st.write(f"PPV: {results['ppv']:.0f}%")
+st.write(f"NPV: {results['npv']:.0f}%")
+st.write(f"LR+: {results['lr_plus']:.2f}")
+st.write(f"LR-: {results['lr_minus']:.2f}")
+st.write(f"Accuracy: {results['accuracy']:.0f}%")
 
-st.dataframe(results_df)
+# Bar chart data
+chart_data = pd.DataFrame([
+    {"name": "(+) test", "Condition (+)": results['true_positive'], "Condition (-)": results['false_positive']},
+    {"name": "(-) test", "Condition (+)": results['false_negative'], "Condition (-)": results['true_negative']}
+])
+
+# Bar chart
+st.subheader("Contingency Table Analysis of Diagnostic Test Performance")
+fig = px.bar(chart_data, x=["Condition (+)", "Condition (-)"], y="name", orientation='h',
+             title="Contingency Table Analysis of Diagnostic Test Performance",
+             labels={"value": "Count", "name": ""}, barmode='stack')
+st.plotly_chart(fig)
