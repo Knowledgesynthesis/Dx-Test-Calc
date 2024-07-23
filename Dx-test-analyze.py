@@ -78,3 +78,10 @@ chart = alt.Chart(chart_data).transform_fold(
 )
 
 st.altair_chart(chart)
+
+# Footer
+st.markdown("""
+    <div style="text-align: center; margin-top: 50px;">
+        Web app made by Bashar Hasan, MD
+    </div>
+""", unsafe_allow_html=True)
