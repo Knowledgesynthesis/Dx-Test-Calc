@@ -47,17 +47,17 @@ specificity = st.number_input("Specificity (%)", min_value=0.0, max_value=100.0,
 # Calculate results
 results = calculate_results(total_patients, prevalence, sensitivity, specificity)
 
-# Display results using st.write
-st.subheader("Results")
-st.write(f"True Positive: {results['true_positive']}")
-st.write(f"False Positive: {results['false_positive']}")
-st.write(f"False Negative: {results['false_negative']}")
-st.write(f"True Negative: {results['true_negative']}")
-st.write(f"PPV: {results['ppv']:.0f}%")
-st.write(f"NPV: {results['npv']:.0f}%")
-st.write(f"LR+: {results['lr_plus']:.2f}")
-st.write(f"LR-: {results['lr_minus']:.2f}")
-st.write(f"Accuracy: {results['accuracy']:.0f}%")
+# Display results in a 2x2 table
+st.subheader("Results Table")
+table_data = [
+    ["", "(+) condition", "(-) condition", ""],
+    ["(+) test", results['true_positive'], results['false_positive'], f"PPV: {results['ppv']:.0f}%"],
+    ["(-) test", results['false_negative'], results['true_negative'], f"NPV: {results['npv']:.0f}%"],
+    ["", f"Sen: {sensitivity}%", f"Spec: {specificity}%", f"Total: {total_patients}"],
+    ["", "", "", f"Accuracy: {results['accuracy']:.0f}%"]
+]
+
+st.table(table_data)
 
 # Bar chart data
 chart_data = pd.DataFrame([
