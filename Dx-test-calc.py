@@ -54,7 +54,7 @@ table_data = [
     ["(+) test", results['true_positive'], results['false_positive'], f"PPV: {results['ppv']:.0f}%"],
     ["(-) test", results['false_negative'], results['true_negative'], f"NPV: {results['npv']:.0f}%"],
     ["", f"Sen: {sensitivity}%", f"Spec: {specificity}%", f"Total: {total_patients}"],
-    ["", "", "", f"Accuracy: {results['accuracy']:.0f}%"]
+    ["", f"+LR: {results['lr_plus']:.2f}", f"-LR: {results['lr_minus']:.2f}", f"Accuracy: {results['accuracy']:.0f}%"]
 ]
 
 st.table(table_data)
