@@ -137,3 +137,10 @@ negative_chart = alt.Chart(negative_test_data).mark_circle(size=100).encode(
     strokeWidth=0
 )
 st.altair_chart(negative_chart)
+
+# Footer
+st.markdown("""
+    <div style="text-align: center; margin-top: 50px;">
+        Web app made by Bashar Hasan, MD
+    </div>
+""", unsafe_allow_html=True)
