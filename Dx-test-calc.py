@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import altair as alt
 
 # Function to calculate the results
 def calculate_results(total_patients, prevalence, sensitivity, specificity):
@@ -66,10 +66,17 @@ chart_data = pd.DataFrame([
 
 # Bar chart
 st.subheader("Contingency Table Analysis of Diagnostic Test Performance")
+chart = alt.Chart(chart_data).transform_fold(
+    fold=['Condition (+)', 'Condition (-)'],
+    as_=['Condition', 'Count']
+).mark_bar().encode(
+    x=alt.X('Count:Q', stack='zero'),
+    y=alt.Y('name:N'),
+    color='Condition:N'
+).properties(
+    title='Contingency Table Analysis of Diagnostic Test Performance',
+    width=600,
+    height=300
+)
 
-fig, ax = plt.subplots()
-chart_data.set_index('name').plot(kind='barh', stacked=True, ax=ax, color=['#ef4444', '#22c55e'])
-ax.set_xlabel('Count')
-ax.set_ylabel('')
-ax.set_title('Contingency Table Analysis of Diagnostic Test Performance')
-st.pyplot(fig)
+st.altair_chart(chart)
